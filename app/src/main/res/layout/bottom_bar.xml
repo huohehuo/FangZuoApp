@@ -36,6 +36,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/bottom_btn_sale"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -58,6 +59,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/bottom_btn_storage"
             android:layout_width="0dp"
             android:layout_height="match_parent"

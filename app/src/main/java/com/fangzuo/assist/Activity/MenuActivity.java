@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.fangzuo.assist.ABase.BaseActivity;
 import com.fangzuo.assist.Adapter.MenuFragmentAdapter;
 import com.fangzuo.assist.Beans.CommonResponse;
+import com.fangzuo.assist.Fragment.P1OneFragment;
 import com.fangzuo.assist.Fragment.PurchaseFragment;
 import com.fangzuo.assist.Fragment.SaleFragment;
 import com.fangzuo.assist.Fragment.SettingFragment;
@@ -178,17 +179,17 @@ public class MenuActivity extends BaseActivity {
                         ivPurchase.setImageResource(R.mipmap.purchase);
                         tvPurchase.setTextColor(tvcolor);
                         break;
+//                    case 1:
+//                        resetBottomView();
+//                        ivSale.setImageResource(R.mipmap.sale);
+//                        tvSale.setTextColor(tvcolor);
+//                        break;
+//                    case 2:
+//                        resetBottomView();
+//                        ivStorage.setImageResource(R.mipmap.storage);
+//                        tvStorage.setTextColor(tvcolor);
+//                        break;
                     case 1:
-                        resetBottomView();
-                        ivSale.setImageResource(R.mipmap.sale);
-                        tvSale.setTextColor(tvcolor);
-                        break;
-                    case 2:
-                        resetBottomView();
-                        ivStorage.setImageResource(R.mipmap.storage);
-                        tvStorage.setTextColor(tvcolor);
-                        break;
-                    case 3:
                         resetBottomView();
                         ivSetting.setImageResource(R.mipmap.setting_focus);
                         tvSetting.setTextColor(tvcolor);
@@ -214,18 +215,18 @@ public class MenuActivity extends BaseActivity {
 
     private void initFragments() {
         FragmentManager fm = getSupportFragmentManager();
-        PurchaseFragment purchaseFragment = new PurchaseFragment();
-        SaleFragment saleFragment = new SaleFragment();
-        StorageFragment storageFragment = new StorageFragment();
+        P1OneFragment purchaseFragment = new P1OneFragment();
+//        SaleFragment saleFragment = new SaleFragment();
+//        StorageFragment storageFragment = new StorageFragment();
         SettingFragment settingFragment = new SettingFragment();
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(purchaseFragment);
-        fragments.add(saleFragment);
-        fragments.add(storageFragment);
+//        fragments.add(saleFragment);
+//        fragments.add(storageFragment);
         fragments.add(settingFragment);
         MenuFragmentAdapter menuFragmentAdapter = new MenuFragmentAdapter(fm, fragments);
         viewPager.setAdapter(menuFragmentAdapter);
-        viewPager.setCurrentItem(1);
+        viewPager.setCurrentItem(0);
     }
 
 
@@ -259,7 +260,7 @@ public class MenuActivity extends BaseActivity {
 
     @OnClick(R.id.bottom_btn_setting)
     public void onBottomBtnSettingClicked() {
-        viewPager.setCurrentItem(3, true);
+        viewPager.setCurrentItem(1, true);
         resetBottomView();
         ivSetting.setImageResource(R.mipmap.setting_focus);
         tvSetting.setTextColor(tvcolor);

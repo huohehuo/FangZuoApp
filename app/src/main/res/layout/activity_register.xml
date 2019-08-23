@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context="com.fangzuo.assist.Activity.RegisterActivity">
+    <include layout="@layout/top_bar"/>
+    <RelativeLayout
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:hint="请输入注册码"
+            android:id="@+id/ed_code"
+            android:gravity="center"
+            android:paddingLeft="45dp"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_edittext_selector"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textSize="15sp" />
+        <ImageView
+            android:id="@+id/iv_scan"
+            android:src="@mipmap/scan"
+            android:layout_width="40dp"
+            android:layout_height="40dp" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/btn_login"
+        android:text="注册"
+        android:textColor="@android:color/white" />
+    <TextView
+        android:id="@+id/tv_msg"
+        tools:text="统计数量"
+        android:layout_marginLeft="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <com.jude.easyrecyclerview.EasyRecyclerView
+        android:id="@+id/ry_data"
+        android:layout_width="match_parent"
+        android:background="@android:color/white"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:recyclerClipToPadding="true"
+        app:recyclerPaddingTop="2dp"
+        app:scrollbarStyle="insideOverlay" />
+</LinearLayout>

@@ -77,4 +77,10 @@ public class Config {
     public static final int PDActivity                              =10024;
     public static final int DBActivity                              =10025;
 
+
+
+    public static final int RegisterActivity                        =10026;
+    public static final int CompanyActivity                         =10027;
+    public static final int PicUtilActivity                         =10028;
+
 }

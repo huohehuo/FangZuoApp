@@ -8,6 +8,7 @@ public class SettingList {
     public int ImageResourse;
     public String tv;
     public String tag;
+    public int activity;
     public SettingList(){}
     public SettingList(String tv,int Image){
         this.ImageResourse = Image;
@@ -17,5 +18,10 @@ public class SettingList {
         this.ImageResourse = Image;
         this.tv=tv;
         this.tag = tag;
+    }
+    public SettingList(String tv,int activity,int Image){
+        this.ImageResourse = Image;
+        this.tv=tv;
+        this.activity = activity;
     }
 }

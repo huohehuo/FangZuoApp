@@ -42,6 +42,8 @@ public class DownloadReturnBean {
 	public ArrayList<InStoreType> inStorageTypes;
 	public ArrayList<GetBatchNoBean> getBatchNoBeans;
 	public ArrayList<SetFile> setFiles;
+	public ArrayList<RegisterBean> registerBeans;
+	public ArrayList<Company> companies;
 
 
 

@@ -13,6 +13,14 @@ import java.util.ArrayList;
  */
 
 public class GetSettingList {
+    public static ArrayList<SettingList> getAppList() {
+        ArrayList<SettingList> items = new ArrayList<>();
+        items.add(new SettingList("注册",Config.RegisterActivity,R.mipmap.purchaseorder));
+        items.add(new SettingList("公司管理项目信息",Config.CompanyActivity,R.mipmap.purchaseorder));
+        items.add(new SettingList("图片处理",Config.PicUtilActivity,R.mipmap.purchaseorder));
+
+        return items;
+    }
     public static ArrayList<SettingList> getPurchaseList() {
         ArrayList<SettingList> items = new ArrayList<>();
         items.add(new SettingList("采购订单",R.mipmap.purchaseorder));
