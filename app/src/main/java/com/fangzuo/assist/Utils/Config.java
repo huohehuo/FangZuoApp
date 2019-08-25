@@ -82,5 +82,6 @@ public class Config {
     public static final int RegisterActivity                        =10026;
     public static final int CompanyActivity                         =10027;
     public static final int PicUtilActivity                         =10028;
+    public static final int GetPicActivity                          =10029;
 
 }

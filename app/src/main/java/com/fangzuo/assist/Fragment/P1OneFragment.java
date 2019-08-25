@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 
 import com.fangzuo.assist.ABase.BaseFragment;
 import com.fangzuo.assist.Activity.CompanyActivity;
+import com.fangzuo.assist.Activity.GetPicActivity;
 import com.fangzuo.assist.Activity.PicUtilActivity;
 import com.fangzuo.assist.Activity.RegisterActivity;
 import com.fangzuo.assist.Adapter.P1OneAdapter;
@@ -101,6 +102,9 @@ public class P1OneFragment extends BaseFragment {
                         break;
                     case Config.PicUtilActivity://箱码调拨单
                         PicUtilActivity.start(mContext);
+                        break;
+                    case Config.GetPicActivity://箱码调拨单
+                        GetPicActivity.start(mContext);
                         break;
 
 //                    case Config.ProductGet4BoxActivity://生产领料(箱码)

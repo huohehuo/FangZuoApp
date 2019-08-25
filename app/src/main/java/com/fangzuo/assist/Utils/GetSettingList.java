@@ -18,6 +18,7 @@ public class GetSettingList {
         items.add(new SettingList("注册",Config.RegisterActivity,R.mipmap.purchaseorder));
         items.add(new SettingList("公司管理项目信息",Config.CompanyActivity,R.mipmap.purchaseorder));
         items.add(new SettingList("图片处理",Config.PicUtilActivity,R.mipmap.purchaseorder));
+        items.add(new SettingList("获取照片",Config.GetPicActivity,R.mipmap.purchaseorder));
 
         return items;
     }
