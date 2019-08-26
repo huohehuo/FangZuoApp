@@ -6,18 +6,25 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.fangzuo.assist.ABase.BaseActivity;
 import com.fangzuo.assist.R;
+import com.fangzuo.assist.Utils.Config;
 import com.fangzuo.assist.Utils.ImageUtil;
 import com.fangzuo.assist.Utils.Lg;
 import com.fangzuo.assist.Utils.MathUtil;
@@ -27,6 +34,7 @@ import com.lidroid.xutils.HttpUtils;
 import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -41,6 +49,7 @@ public class GetPicActivity extends BaseActivity {
 
     @BindView(R.id.btn1)
     Button btn1;
+
     @BindView(R.id.btn2)
     Button btn2;
     @BindView(R.id.iv)
@@ -53,11 +62,15 @@ public class GetPicActivity extends BaseActivity {
     EditText etW;
     @BindView(R.id.et_h)
     EditText etH;
+    @BindView(R.id.bg_set)
+    LinearLayout bgSet;
     private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj_down.jpg";
     private String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-loc.jpg";
     private String path2 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-new.jpg";
     private String path3 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-new_with_logo.jpg";
 
+    private int logoW;
+    private int logoH;
     @Override
     protected void initView() {
         setContentView(R.layout.activity_get_pic);
@@ -74,6 +87,24 @@ public class GetPicActivity extends BaseActivity {
     protected void initData() {
         sbLeft.setMax(500);
         sbBt.setMax(200);
+        logoW = Hawk.get(Config.Logo_W,100);
+        logoH = Hawk.get(Config.Logo_H,100);
+        left = Hawk.get(Config.Logo_Left,100);
+        bottm = Hawk.get(Config.Logo_Bottom,100);
+        sbLeft.setProgress(left);
+        sbBt.setProgress(bottm);
+
+        Glide.with(GetPicActivity.this)
+                .load("http://192.168.0.105:8080/Assist/img/test.jpg")
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        //加载完成后的处理
+                        iv.setImageDrawable(resource);
+                        basePic = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+
+                    }
+                });
     }
 
     @Override
@@ -83,6 +114,7 @@ public class GetPicActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 //                Lg.e("当前Left",progress);
                 left = progress;
+                Hawk.put(Config.Logo_Left,progress);
             }
 
             @Override
@@ -92,7 +124,7 @@ public class GetPicActivity extends BaseActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-//                setNewBitmap();
+                setNewBitmap();
             }
         });
         sbBt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -100,6 +132,8 @@ public class GetPicActivity extends BaseActivity {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 //                Lg.e("当前Bottom",progress);
                 bottm = progress;
+                Hawk.put(Config.Logo_Bottom,progress);
+
             }
 
             @Override
@@ -109,10 +143,18 @@ public class GetPicActivity extends BaseActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-//                setNewBitmap();
+                setNewBitmap();
             }
         });
 
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        Hawk.put(Config.Logo_W,MathUtil.toInt(etW.getText().toString()));
+        Hawk.put(Config.Logo_H,MathUtil.toInt(etH.getText().toString()));
+        super.onDestroy();
 
     }
 
@@ -121,7 +163,7 @@ public class GetPicActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn1,R.id.btn_add, R.id.btn2, R.id.btn3, R.id.btn4, R.id.iv})
+    @OnClick({R.id.btn1, R.id.btn_add, R.id.btn2, R.id.btn3, R.id.btn4, R.id.iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn1:
@@ -154,9 +196,17 @@ public class GetPicActivity extends BaseActivity {
 //                        .into(iv);
                 break;
             case R.id.iv:
-                Glide.with(GetPicActivity.this)
-                        .load("http://192.168.0.136:8081/Assist/img/bg.jpg")
-                        .into(iv);
+                if (bgSet.getVisibility()==View.GONE){
+                    etH.setText(logoH+"");
+                    etW.setText(logoW+"");
+                    bgSet.setVisibility(View.VISIBLE);
+                }else{
+                    logoH = MathUtil.toInt(etH.getText().toString());
+                    logoW = MathUtil.toInt(etW.getText().toString());
+                    Hawk.put(Config.Logo_W,logoW);
+                    Hawk.put(Config.Logo_H,logoH);
+                    bgSet.setVisibility(View.GONE);
+                }
                 break;
         }
     }
@@ -164,15 +214,17 @@ public class GetPicActivity extends BaseActivity {
     int left = 0;
     int bottm = 0;
     Bitmap basePic;
+
     private void setNewBitmap() {
         Lg.e("当前left-bottm", left + "-" + bottm);
+        if (null==basePic)return;
         //获取原始图片
 //        Bitmap sourBitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
         //水印图片
         Bitmap waterBitmap = BitmapFactory.decodeFile(PicUtilActivity.path);
 
 //        Bitmap watermarkBitmap = ImageUtil.createWaterMaskCenter(sourBitmap, waterBitmap);
-        Bitmap watermarkBitmap = ImageUtil.createWaterMaskLeftTop(basePic, waterBitmap, left, bottm, MathUtil.toInt(etW.getText().toString()), MathUtil.toInt(etH.getText().toString()));
+        Bitmap watermarkBitmap = ImageUtil.createWaterMaskLeftTop(basePic, waterBitmap, left, bottm, MathUtil.toInt(etW.getText().toString()),  MathUtil.toInt(etH.getText().toString()));
 //        watermarkBitmap = ImageUtil.createWaterMaskRightBottom(watermarkBitmap, waterBitmap, 0, 0);
 //        watermarkBitmap = ImageUtil.createWaterMaskLeftTop(watermarkBitmap, waterBitmap, 0, 0);
 //        watermarkBitmap = ImageUtil.createWaterMaskRightTop(watermarkBitmap, waterBitmap, 0, 0);

@@ -26,6 +26,15 @@ public class Config {
     public static final String IO_type_connectToSQL="IO_type_connectToSQL";
 
 
+
+    public static final String Logo_W="Logo_W";
+    public static final String Logo_H="Logo_H";
+    public static final String Logo_Left="Logo_Left";
+    public static final String Logo_Bottom="Logo_Bottom";
+
+
+
+
     //用于Presenter下载表的type区分
     public static final int Data_Bibie           =1;    //币别表
     public static final int Data_Department      =2;    //部门表
