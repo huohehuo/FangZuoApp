@@ -17,8 +17,8 @@ public class GetSettingList {
         ArrayList<SettingList> items = new ArrayList<>();
         items.add(new SettingList("注册",Config.RegisterActivity,R.mipmap.purchaseorder));
         items.add(new SettingList("公司管理项目信息",Config.CompanyActivity,R.mipmap.purchaseorder));
-        items.add(new SettingList("图片处理",Config.PicUtilActivity,R.mipmap.purchaseorder));
-        items.add(new SettingList("获取照片",Config.GetPicActivity,R.mipmap.purchaseorder));
+        items.add(new SettingList("照片处理",Config.GetPicActivity,R.mipmap.purchaseorder));
+//        items.add(new SettingList("获取文件列表",Config.GetFileActivity,R.mipmap.purchaseorder));
 
         return items;
     }

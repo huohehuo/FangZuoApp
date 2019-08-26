@@ -15,22 +15,74 @@
             android:id="@+id/btn1"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="获取照片"
+            android:text="生成签名"
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn2"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="获取照片2"
+            android:text="保存图片1"
             android:layout_height="wrap_content" />
         <Button
             android:id="@+id/btn3"
             android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="获取照片2"
+            android:text="保存图片2"
             android:layout_height="wrap_content" />
-
+        <Button
+            android:id="@+id/btn4"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:text="锁定图片"
+            android:layout_height="wrap_content" />
     </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/et_w"
+            android:hint="水印宽度"
+            android:layout_width="0dp"
+            android:inputType="number"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/et_h"
+            android:layout_width="0dp"
+            android:inputType="number"
+            android:hint="水印高度"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:text="向右移动"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/sb_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1000" />
+    <TextView
+        android:text="向上移动"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <SeekBar
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/sb_bt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="1000" />
+    <include layout="@layout/line_heng"/>
+    <Button
+        android:id="@+id/btn_add"
+        android:layout_width="match_parent"
+        android:text="添加水印"
+        android:layout_height="wrap_content" />
     <ImageView
         android:id="@+id/iv"
         android:layout_width="match_parent"

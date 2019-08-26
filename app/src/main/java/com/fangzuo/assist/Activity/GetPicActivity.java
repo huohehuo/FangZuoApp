@@ -1,43 +1,41 @@
 package com.fangzuo.assist.Activity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.bumptech.glide.Glide;
 import com.fangzuo.assist.ABase.BaseActivity;
 import com.fangzuo.assist.R;
-import com.fangzuo.assist.Utils.CommonUtil;
 import com.fangzuo.assist.Utils.ImageUtil;
+import com.fangzuo.assist.Utils.Lg;
+import com.fangzuo.assist.Utils.MathUtil;
 import com.fangzuo.assist.Utils.Toast;
 import com.fangzuo.assist.widget.LoadingUtil;
 import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
 import com.lidroid.xutils.http.ResponseInfo;
 import com.lidroid.xutils.http.callback.RequestCallBack;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-import static com.fangzuo.assist.Utils.CommonUtil.getTimeLong;
 
 public class GetPicActivity extends BaseActivity {
 
@@ -47,6 +45,18 @@ public class GetPicActivity extends BaseActivity {
     Button btn2;
     @BindView(R.id.iv)
     ImageView iv;
+    @BindView(R.id.sb_left)
+    SeekBar sbLeft;
+    @BindView(R.id.sb_bt)
+    SeekBar sbBt;
+    @BindView(R.id.et_w)
+    EditText etW;
+    @BindView(R.id.et_h)
+    EditText etH;
+    private String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj_down.jpg";
+    private String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-loc.jpg";
+    private String path2 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-new.jpg";
+    private String path3 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-new_with_logo.jpg";
 
     @Override
     protected void initView() {
@@ -57,17 +67,52 @@ public class GetPicActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        DownLoad("http://192.168.0.105:8080/Assist/img/banner001.jpg");
-
+//        DownLoad("http://192.168.0.136:8081/Assist/img/bg.jpg");
     }
 
     @Override
     protected void initData() {
-
+        sbLeft.setMax(500);
+        sbBt.setMax(200);
     }
 
     @Override
     protected void initListener() {
+        sbLeft.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                Lg.e("当前Left",progress);
+                left = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+//                setNewBitmap();
+            }
+        });
+        sbBt.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                Lg.e("当前Bottom",progress);
+                bottm = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+//                setNewBitmap();
+            }
+        });
+
 
     }
 
@@ -76,25 +121,31 @@ public class GetPicActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn1, R.id.btn2,R.id.btn3, R.id.iv})
+    @OnClick({R.id.btn1,R.id.btn_add, R.id.btn2, R.id.btn3, R.id.btn4, R.id.iv})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn1:
-                Glide.with(GetPicActivity.this)
-//                        .asGif()
-//                        .load("http://192.168.0.105:8080/Assist/img/logo.gif")
-                        .load(R.drawable.test)
-                        .into(iv);
+                PicUtilActivity.start(mContext);
                 break;
-            case R.id.btn2:
-                break;
-            case R.id.iv:
+            case R.id.btn_add:
+                setNewBitmap();
 //                Glide.with(GetPicActivity.this)
-//                        .load(R.mipmap.chuku)
+////                        .asGif()
+////                        .load("http://192.168.0.105:8080/Assist/img/logo.gif")
+//                        .load(R.drawable.test)
 //                        .into(iv);
                 break;
+            case R.id.btn2:
+                saveBitmap(((BitmapDrawable) iv.getDrawable()).getBitmap(), path1);
+                break;
             case R.id.btn3:
-                setNewBitmap();
+                saveBitmap(((BitmapDrawable) iv.getDrawable()).getBitmap(), path2);
+                break;
+            case R.id.btn4:
+                basePic = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+
+//                saveBitmap(((BitmapDrawable) iv.getDrawable()).getBitmap(), path3);
+
 //                String target = Environment.getExternalStorageDirectory()
 //                        + "/NewApp"+getTimeLong(false)+".jpg";
 //                File file = new File(target);
@@ -102,17 +153,26 @@ public class GetPicActivity extends BaseActivity {
 //                        .load(file)
 //                        .into(iv);
                 break;
+            case R.id.iv:
+                Glide.with(GetPicActivity.this)
+                        .load("http://192.168.0.136:8081/Assist/img/bg.jpg")
+                        .into(iv);
+                break;
         }
     }
 
-    private void setNewBitmap(){
+    int left = 0;
+    int bottm = 0;
+    Bitmap basePic;
+    private void setNewBitmap() {
+        Lg.e("当前left-bottm", left + "-" + bottm);
         //获取原始图片
-        Bitmap sourBitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
+//        Bitmap sourBitmap = ((BitmapDrawable) iv.getDrawable()).getBitmap();
         //水印图片
         Bitmap waterBitmap = BitmapFactory.decodeFile(PicUtilActivity.path);
 
-        Bitmap watermarkBitmap = ImageUtil.createWaterMaskCenter(sourBitmap, waterBitmap);
-        watermarkBitmap = ImageUtil.createWaterMaskLeftBottom(watermarkBitmap, waterBitmap, 1100, 500);
+//        Bitmap watermarkBitmap = ImageUtil.createWaterMaskCenter(sourBitmap, waterBitmap);
+        Bitmap watermarkBitmap = ImageUtil.createWaterMaskLeftTop(basePic, waterBitmap, left, bottm, MathUtil.toInt(etW.getText().toString()), MathUtil.toInt(etH.getText().toString()));
 //        watermarkBitmap = ImageUtil.createWaterMaskRightBottom(watermarkBitmap, waterBitmap, 0, 0);
 //        watermarkBitmap = ImageUtil.createWaterMaskLeftTop(watermarkBitmap, waterBitmap, 0, 0);
 //        watermarkBitmap = ImageUtil.createWaterMaskRightTop(watermarkBitmap, waterBitmap, 0, 0);
@@ -120,7 +180,32 @@ public class GetPicActivity extends BaseActivity {
         iv.setImageBitmap(watermarkBitmap);
     }
 
+    /**
+     * 保存方法
+     */
+    public void saveBitmap(Bitmap bm, String picName) {
+        File f = new File(picName);
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+            Log.i(TAG, "已经保存");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
     private ProgressDialog pDialog;
+
     private void DownLoad(String downLoadURL) {
         LoadingUtil.dismiss();
         if (Environment.getExternalStorageState().equals(
@@ -130,24 +215,24 @@ public class GetPicActivity extends BaseActivity {
             pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             pDialog.setTitle("下载中");
             pDialog.show();
-            String target = Environment.getExternalStorageDirectory()
-                    + "/NewApp"+getTimeLong(false)+".jpg";
+//            String target = Environment.getExternalStorageDirectory()
+//                    + "/NewApp" + getTimeLong(false) + ".jpg";
             HttpUtils utils = new HttpUtils();
 
-            utils.download(downLoadURL, target, new RequestCallBack<File>() {
+            utils.download(downLoadURL, path, new RequestCallBack<File>() {
 
                 @Override
                 public void onLoading(long total, long current,
                                       boolean isUploading) {
                     super.onLoading(total, current, isUploading);
                     System.out.println("下载进度:" + current + "/" + total);
-                    pDialog.setProgress((int) (current*100/total));
+                    pDialog.setProgress((int) (current * 100 / total));
                 }
 
                 @Override
                 public void onSuccess(ResponseInfo<File> arg0) {
                     pDialog.dismiss();
-                    LoadingUtil.showAlter(mContext,"","下载完成");
+                    LoadingUtil.showAlter(mContext, "", "下载完成");
                     System.out.println("下载完成");
 //                    try{
 //                        CommonUtil.installApk(mContext,arg0.result+"");
@@ -179,7 +264,7 @@ public class GetPicActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onFailure(com.lidroid.xutils.exception.HttpException arg0, String arg1) {
+                public void onFailure(HttpException arg0, String arg1) {
                     pDialog.dismiss();
                     Toast.showText(mContext, "下载失败");
                 }
@@ -194,10 +279,15 @@ public class GetPicActivity extends BaseActivity {
     }
 
 
-
-
     public static void start(Context context) {
         Intent intent = new Intent(context, GetPicActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

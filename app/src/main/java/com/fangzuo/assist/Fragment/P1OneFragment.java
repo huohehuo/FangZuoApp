@@ -100,9 +100,6 @@ public class P1OneFragment extends BaseFragment {
                     case Config.CompanyActivity://箱码调拨单
                         CompanyActivity.start(mContext);
                         break;
-                    case Config.PicUtilActivity://箱码调拨单
-                        PicUtilActivity.start(mContext);
-                        break;
                     case Config.GetPicActivity://箱码调拨单
                         GetPicActivity.start(mContext);
                         break;

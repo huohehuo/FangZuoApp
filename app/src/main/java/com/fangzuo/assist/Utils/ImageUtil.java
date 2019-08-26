@@ -3,6 +3,7 @@ package com.fangzuo.assist.Utils;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.view.View;
 
 public class ImageUtil {
@@ -16,8 +17,8 @@ public class ImageUtil {
      * @param paddingTop
      * @return
      */
-    public static Bitmap createWaterMaskLeftTop(Bitmap src, Bitmap watermark, int paddingLeft, int paddingTop) {
-        return createWaterMaskBitmap(src, watermark, dp2px(paddingLeft), dp2px(paddingTop));
+    public static Bitmap createWaterMaskLeftTop(Bitmap src, Bitmap watermark, int paddingLeft, int paddingTop,int logow,int logoh) {
+        return createWaterMaskBitmap(src, watermark, dp2px(paddingLeft), dp2px(paddingTop),logow,logoh);
     }
 
     /**
@@ -55,8 +56,8 @@ public class ImageUtil {
      * @param paddingBottom
      * @return
      */
-    public static Bitmap createWaterMaskLeftBottom(Bitmap src, Bitmap watermark, int paddingLeft, int paddingBottom) {
-        return createWaterMaskBitmap(src, watermark, dp2px(paddingLeft), src.getHeight() - watermark.getHeight() - dp2px(paddingBottom));
+    public static Bitmap createWaterMaskLeftBottom(Bitmap src, Bitmap watermark, int paddingLeft, int paddingBottom,int logow,int logoh) {
+        return createWaterMaskBitmap(src, watermark, dp2px(paddingLeft), src.getHeight() - watermark.getHeight() - dp2px(paddingBottom),logow,logoh);
     }
 
     /**
@@ -68,6 +69,33 @@ public class ImageUtil {
      */
     public static Bitmap createWaterMaskCenter(Bitmap src, Bitmap watermark) {
         return createWaterMaskBitmap(src, watermark, (src.getWidth() - watermark.getWidth()) / 2, (src.getHeight() - watermark.getHeight()) / 2);
+    }
+    public static Bitmap createWaterMaskBitmap(Bitmap src, Bitmap watermarktemp, int paddingLeft, int paddingTop,int logow,int logoh) {
+        if (src == null) {
+            return null;
+        }
+        int width = src.getWidth();
+        int height = src.getHeight();
+//        Lg.e("原始图片大小",width);
+//        Lg.e("原始图片大小",height);
+        Bitmap watermark = imageScale(watermarktemp,logow,logoh);
+//        Lg.e("水印图片大小",watermark.getWidth());
+//        Lg.e("水印图片大小",watermark.getHeight());
+
+        //创建一个bitmap
+        Bitmap newb = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);// 创建一个新的和SRC长度宽度一样的位图
+        //将该图片作为画布
+        Canvas canvas = new Canvas(newb);
+        //在画布 0，0坐标上开始绘制原始图片
+        canvas.drawBitmap(src, 0, 0, null);
+        //在画布上绘制水印图片
+//        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
+        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
+        // 保存
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        // 存储
+        canvas.restore();
+        return newb;
     }
 
     private static Bitmap createWaterMaskBitmap(Bitmap src, Bitmap watermark, int paddingLeft, int paddingTop) {
@@ -89,12 +117,35 @@ public class ImageUtil {
         canvas.drawBitmap(src, 0, 0, null);
         //在画布上绘制水印图片
 //        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
-        canvas.drawBitmap(watermark, 500, 100, null);
+        canvas.drawBitmap(watermark, paddingLeft, paddingTop, null);
         // 保存
         canvas.save(Canvas.ALL_SAVE_FLAG);
         // 存储
         canvas.restore();
         return newb;
+    }
+
+    /**
+     * 调整图片大小
+     *
+     * @param bitmap
+     *            源
+     * @param dst_w
+     *            输出宽度
+     * @param dst_h
+     *            输出高度
+     * @return
+     */
+    public static Bitmap imageScale(Bitmap bitmap, int dst_w, int dst_h) {
+        int src_w = bitmap.getWidth();
+        int src_h = bitmap.getHeight();
+        float scale_w = ((float) dst_w) / src_w;
+        float scale_h = ((float) dst_h) / src_h;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale_w, scale_h);
+        Bitmap dstbmp = Bitmap.createBitmap(bitmap, 0, 0, src_w, src_h, matrix,
+                true);
+        return dstbmp;
     }
 
     /**
