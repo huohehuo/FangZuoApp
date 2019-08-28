@@ -1,9 +1,11 @@
 package com.fangzuo.assist.Activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -39,13 +41,15 @@ import com.loopj.android.http.AsyncHttpClient;
 import org.greenrobot.greendao.async.AsyncSession;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MenuActivity extends BaseActivity {
+public class MenuActivity extends BaseActivity  implements EasyPermissions.PermissionCallbacks {
 
 
     @BindView(R.id.btn_back)
@@ -125,6 +129,7 @@ public class MenuActivity extends BaseActivity {
         ButterKnife.bind(mContext);
         initFragments();
         Welcome();
+        getPermisssion();
 
     }
 
@@ -286,6 +291,34 @@ public class MenuActivity extends BaseActivity {
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
+    //权限获取-------------------------------------------------------------
+    private void getPermisssion() {
+        String[] perm = {
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        if (!EasyPermissions.hasPermissions(mContext, perm)) {
+            EasyPermissions.requestPermissions(this, "必要的权限", 0, perm);
+        }
 
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //把申请权限的回调交由EasyPermissions处理
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        Log.i("permisssion", "获取成功的权限" + perms);
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        Log.i("permisssion", "获取失败的权限" + perms);
+    }
 
 }

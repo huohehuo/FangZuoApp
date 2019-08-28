@@ -2,11 +2,22 @@ package com.fangzuo.assist.Utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class ImageUtil {
+
 
     /**
      * 设置水印图片在左上角
@@ -149,6 +160,29 @@ public class ImageUtil {
     }
 
     /**
+     * 保存图片到本地
+     */
+    public static void saveBitmap(Bitmap bm, String picName) {
+        File f = new File(picName);
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            FileOutputStream out = new FileOutputStream(f);
+            bm.compress(Bitmap.CompressFormat.PNG, 90, out);
+            out.flush();
+            out.close();
+            Lg.e("保存图片", "已经保存");
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 将View转成Bitmap
      *
      * @param view
@@ -172,5 +206,39 @@ public class ImageUtil {
     public static int dp2px(float dp) {
         final float scale = Resources.getSystem().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
+    }
+
+    //将图片转换成二进制
+    public static byte[] getBitmap2Byte(Bitmap bitmap){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+        try {
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return out.toByteArray();
+    }
+    //将二进制转化为图片
+    public static Bitmap getByte2Bitmap(byte[] temp){
+        if(temp != null){
+            Bitmap bitmap = BitmapFactory.decodeByteArray(temp, 0, temp.length);
+            return bitmap;
+        }else{
+            return null;
+        }
+    }
+
+    public static Bitmap drawableToBitmap(Drawable drawable){
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        Bitmap bitmap = Bitmap.createBitmap(width, height,
+                drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                        : Bitmap.Config.RGB_565);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0,0,width,height);
+        drawable.draw(canvas);
+        return bitmap;
     }
 }

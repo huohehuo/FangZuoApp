@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.fangzuo.assist.ABase.BaseActivity;
 import com.fangzuo.assist.R;
@@ -40,15 +42,23 @@ public class PicUtilActivity extends BaseActivity {
 
     public static String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj.png";
     public static String path2 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "fangzuokejiaaa.jpg";
+    @BindView(R.id.btn_back)
+    RelativeLayout btnBack;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_right)
+    TextView tvRight;
+
     @Override
     protected void initView() {
         setContentView(R.layout.activity_pic_util);
         ButterKnife.bind(this);
+        tvTitle.setText("设置签名");
     }
 
     @Override
     protected void initData() {
-
+        showLogo();
     }
 
     @Override
@@ -61,31 +71,14 @@ public class PicUtilActivity extends BaseActivity {
 
     }
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, PicUtilActivity.class);
-        context.startActivity(intent);
-    }
-
-    @OnClick({R.id.btn_clear, R.id.btn_getpic, R.id.btn_reset})
+    @OnClick({R.id.btn_clear, R.id.btn_getpic, R.id.btn_reset, R.id.tv_right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_clear:
                 writeView.clear();
                 break;
             case R.id.btn_getpic:
-                FileInputStream fisd = null;
-                try {
-//                    Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-                    Lg.e("图片地址",PicUtilActivity.path);
-                    fisd = new FileInputStream(PicUtilActivity.path);
-                    Bitmap bitmap  = BitmapFactory.decodeStream(fisd);
-                    if (bitmap==null){
-                        Toast.showText(mContext,"不存在相片");
-                    }
-                    ivImg.setImageBitmap(bitmap);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
+                showLogo();
                 break;
             case R.id.btn_reset:
 //                FileInputStream fis = null;
@@ -106,6 +99,31 @@ public class PicUtilActivity extends BaseActivity {
                     e.printStackTrace();
                 }
                 break;
+            case R.id.tv_right:
+                finish();
+                break;
         }
+    }
+    //显示本地已存在的签名
+    private void showLogo(){
+        FileInputStream fisd = null;
+        try {
+//                    Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+            Lg.e("图片地址", PicUtilActivity.path);
+            fisd = new FileInputStream(PicUtilActivity.path);
+            Bitmap bitmap = BitmapFactory.decodeStream(fisd);
+            if (bitmap == null) {
+                Toast.showText(mContext, "不存在相片");
+            }
+            ivImg.setImageBitmap(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, PicUtilActivity.class);
+        context.startActivity(intent);
     }
 }

@@ -1,0 +1,7 @@
+别名：FZKJ
+密码：fangzuokeji601.
+公司名称：Fang Zuo
+包名：com.fangzuo.app
+组织：fangzuo
+china
+shenzhen

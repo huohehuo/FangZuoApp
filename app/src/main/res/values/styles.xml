@@ -13,7 +13,10 @@
         <item name="colorPrimaryDark">#ff00ddff</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
+    <style name="CustomDialog" parent="android:Theme.Dialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
     <!-- my loading dialog -->
     <style name="LoadingDialogStyle">
         <item name="android:windowBackground">@android:color/transparent</item>

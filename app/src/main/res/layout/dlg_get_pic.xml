@@ -1,91 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bg_set"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:id="@+id/bg_set"
+    android:layout_margin="8dp"
     tools:context="com.fangzuo.assist.Activity.GetPicActivity">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/btn1"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="生成签名"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn2"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="保存图片1"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn3"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="保存图片2"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn4"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:text="锁定图片"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/et_w"
-            android:hint="水印宽度"
-            android:layout_width="0dp"
-            android:selectAllOnFocus="true"
-            android:inputType="number"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-        <EditText
-            android:id="@+id/et_h"
-            android:layout_width="0dp"
-            android:inputType="number"
-            android:selectAllOnFocus="true"
-            android:hint="水印高度"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-    <TextView
-        android:text="向右移动"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <SeekBar
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/sb_left"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:max="1000" />
-    <TextView
-        android:text="向下移动"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <SeekBar
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="20dp"
-        android:id="@+id/sb_bt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="1000" />
-    <include layout="@layout/line_heng"/>
-    <Button
-        android:id="@+id/btn_add"
-        android:layout_width="match_parent"
-        android:text="添加水印"
-        android:layout_height="wrap_content" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:text="宽："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/et_w"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="水印宽度"
+                android:inputType="number"
+                android:selectAllOnFocus="true" />
+
+            <TextView
+                android:text="高："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:id="@+id/et_h"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="水印高度"
+                android:inputType="number"
+                android:selectAllOnFocus="true" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_margin="4dp"
+            android:id="@+id/tv_move_right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="向右移动" />
+
+        <SeekBar
+            android:id="@+id/sb_left"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="12dp"
+            android:max="1000" />
+
+        <TextView
+            android:layout_margin="4dp"
+            android:id="@+id/tv_move_bot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="向下移动" />
+
+        <SeekBar
+            android:id="@+id/sb_bt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="12dp"
+            android:max="1000" />
+
+        <include layout="@layout/line_heng" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_login"
+                android:text="生成签名" />
+
+            <include layout="@layout/line_shu" />
+
+            <Button
+                android:id="@+id/btn2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_login"
+                android:text="保存图片到本地" />
+
+            <include layout="@layout/line_shu" />
+
+            <Button
+                android:id="@+id/btn4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/btn_login"
+                android:text="锁定图片" />
+        </LinearLayout>
+        <include layout="@layout/line_heng" />
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_login"
+            android:text="添加水印" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</android.support.v7.widget.CardView>

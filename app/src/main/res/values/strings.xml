@@ -3,6 +3,18 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="dialog_select_image_title">选择照片</string>
+    <string name="dialog_select_image_message">从哪获取照片?</string>
+    <string name="dialog_select_image_file">相册</string>
+    <string name="dialog_select_image_camera">拍照</string>
+    <string name="fragment_select_image_no_permission">无读取文件权限</string>
+    <string name="activity_crop_menu_done">完成</string>
+    <string name="activity_crop_waiting_crop">正在裁剪图片</string>
+    <string name="activity_crop_waiting_read">正在读取图片</string>
+    <string name="common_hint">提示</string>
+    <string name="common_waiting">请稍后</string>
+
     <string name="wgrkxt">外购入库下推</string>
     <string name="storage">仓库</string>
     <string name="wavehouse">仓位</string>
