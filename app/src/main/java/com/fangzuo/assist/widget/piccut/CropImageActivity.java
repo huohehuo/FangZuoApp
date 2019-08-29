@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -18,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.fangzuo.assist.R;
+import com.fangzuo.assist.Utils.Lg;
 import com.fangzuo.assist.widget.LoadingUtil;
 
 import java.io.File;
@@ -80,7 +82,7 @@ public class CropImageActivity extends AppCompatActivity {
         cropImageView.setFrameColor(getResources().getColor(R.color.colorAccent));
         cropImageView.setGuideColor(getResources().getColor(R.color.colorAccent));
         tvTitle.setText("裁剪图片");
-        tvRight.setTextColor(getResources().getColor(R.color.cpb_blue));
+        tvRight.setTextColor(getResources().getColor(R.color.black));
         tvRight.setText("完成");
 
         tvRight.setOnClickListener(new View.OnClickListener() {
@@ -196,8 +198,11 @@ public class CropImageActivity extends AppCompatActivity {
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
-        Uri uri = Uri.fromFile(file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        Uri photoURI = FileProvider.getUriForFile(getApplicationContext(),
+                this.getPackageName()+".new.provider",
+                file);
+//        Uri uri = Uri.fromFile(file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         startActivityForResult(intent, FROM_CAREMA);
     }
 
@@ -210,6 +215,7 @@ public class CropImageActivity extends AppCompatActivity {
      */
     public static void startActivity(Activity activity, String imagePath, boolean fromCamera, int requestCode) {
         Intent intent = new Intent(activity, CropImageActivity.class);
+        Lg.e("得到路径",imagePath);
         intent.putExtra(IMAGE_PATH_KEY, imagePath);
         if (fromCamera)
             intent.putExtra(CropImageActivity.ORDER_TITLE, CropImageActivity.ORDER_SELECT_FROM_CAMERA);

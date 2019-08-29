@@ -14,10 +14,12 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
@@ -96,6 +98,8 @@ public class GetPicActivity extends BaseActivity {
     private String path1 = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-loc.jpg";
     private String path_4loc = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-loc.jpg";
     private String path_get = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "1/fzkj-get.jpg";
+    public static final String Pic_Path   = Environment.getExternalStorageDirectory().getAbsolutePath()+"/1/fzkj-get.jpg";
+
 
     private int logoW;
     private int logoH;
@@ -235,7 +239,6 @@ public class GetPicActivity extends BaseActivity {
                 uploadPic();
                 break;
             case R.id.btn4:
-                zoomImageFromThumb(iv);
 //                basePic = ((BitmapDrawable) iv.getDrawable()).getBitmap();
 
 //                saveBitmap(((BitmapDrawable) iv.getDrawable()).getBitmap(), path3);
@@ -263,8 +266,10 @@ public class GetPicActivity extends BaseActivity {
                 break;
             case R.id.iv:
                 if (bgSet.getVisibility() == View.GONE) {
-                    etH.setText(logoH + "");
-                    etW.setText(logoW + "");
+                    Hawk.put("pic",((BitmapDrawable) iv.getDrawable()).getBitmap());
+                    ShowBigPicActivity.start(mContext);
+//                    etH.setText(logoH + "");
+//                    etW.setText(logoW + "");
 //                    bgSet.setVisibility(View.VISIBLE);
                 } else {
                     logoH = MathUtil.toInt(etH.getText().toString());
@@ -330,7 +335,11 @@ public class GetPicActivity extends BaseActivity {
             public void OnclickLiseten(int id) {
                 switch (id) {
                     case SelectPhotoDialog.BN_TAKEPHOTO:
-                        CropImageActivity.startActivity(GetPicActivity.this, path_get, true, 2);
+//                        File file = new File(Pic_Path);
+//                        Uri photoURI = FileProvider.getUriForFile(getApplicationContext(),
+//                                mContext.getPackageName()+".new.provider",
+//                                file);
+                        CropImageActivity.startActivity(GetPicActivity.this, Pic_Path, true, 3);
                         selectPhotoDialog.dismiss();
                         break;
                     case SelectPhotoDialog.BN_SELECTPHOTO:
@@ -366,197 +375,18 @@ public class GetPicActivity extends BaseActivity {
                     iv.setImageBitmap(bitmap);
                     basePic = bitmap;
                     break;
-            }
-        }
-    }
-
-
-    private ProgressDialog pDialog;
-
-    private void DownLoad(String downLoadURL) {
-        LoadingUtil.dismiss();
-        if (Environment.getExternalStorageState().equals(
-                Environment.MEDIA_MOUNTED)) {
-
-            pDialog = new ProgressDialog(mContext);
-            pDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            pDialog.setTitle("下载中");
-            pDialog.show();
-//            String target = Environment.getExternalStorageDirectory()
-//                    + "/NewApp" + getTimeLong(false) + ".jpg";
-            HttpUtils utils = new HttpUtils();
-
-            utils.download(downLoadURL, path, new RequestCallBack<File>() {
-
-                @Override
-                public void onLoading(long total, long current,
-                                      boolean isUploading) {
-                    super.onLoading(total, current, isUploading);
-                    System.out.println("下载进度:" + current + "/" + total);
-                    pDialog.setProgress((int) (current * 100 / total));
-                }
-
-                @Override
-                public void onSuccess(ResponseInfo<File> arg0) {
-                    pDialog.dismiss();
-                    LoadingUtil.showAlter(mContext, "", "下载完成");
-                    System.out.println("下载完成");
-//                    try{
-//                        CommonUtil.installApk(mContext,arg0.result+"");
-////                        Intent intent = new Intent(Intent.ACTION_VIEW);
-////                        intent.addCategory(Intent.CATEGORY_DEFAULT);
-////                        intent.setDataAndType(Uri.fromFile(arg0.result),
-////                                "application/vnd.android.package-archive");
-////                        startActivityForResult(intent, 0);
-//                    }catch (Exception e){
-//                        try{
-//                            StringBuilder builder = new StringBuilder();
-//                            builder.append("请先退出本软件\n");
-//                            builder.append("进入PDA软件主页\n");
-//                            builder.append("选择文件管理器\n");
-//                            builder.append("找到文件NewApp\n");
-//                            builder.append("长按变色点击右下角重命名\n删去后面的数字\n");
-//                            builder.append("变成文件名：NewApp.apk\n");
-//                            builder.append("点击安装\n");
-//                            AlertDialog.Builder ab = new AlertDialog.Builder(mContext);
-//                            ab.setTitle("下载成功!\n请按操作重新安装APK");
-//                            ab.setMessage(builder.toString());
-//                            ab.setPositiveButton("确定", null);
-//                            ab.create().show();
-//                        }catch (Exception e1){
-//
-//                        }
-//                    }
-
-                }
-
-                @Override
-                public void onFailure(HttpException arg0, String arg1) {
-                    pDialog.dismiss();
-                    Toast.showText(mContext, "下载失败");
-                }
-
-
-            });
-        } else {
-            pDialog.dismiss();
-            Toast.showText(mContext, "正在安装");
-
-        }
-    }
-
-    private void zoomImageFromThumb(final View thumbView) {
-        // 如果有动画正在运行，取消这个动画
-        if (mCurrentAnimator != null) {
-            mCurrentAnimator.cancel();
-        }
-        // 加载显示大图的ImageView
-        if (imagebyte == null) {
-            return;
-        }
-        iv.setImageBitmap(ImageUtil.getByte2Bitmap(imagebyte));
-
-        // 计算初始小图的边界位置和最终大图的边界位置。
-        final Rect startBounds = new Rect();
-        final Rect finalBounds = new Rect();
-        final Point globalOffset = new Point();
-
-        // 小图的边界就是小ImageView的边界，大图的边界因为是铺满全屏的，所以就是整个布局的边界。
-        // 然后根据偏移量得到正确的坐标。
-        thumbView.getGlobalVisibleRect(startBounds);
-        findViewById(R.id.container).getGlobalVisibleRect(finalBounds, globalOffset);
-        startBounds.offset(-globalOffset.x, -globalOffset.y);
-        finalBounds.offset(-globalOffset.x, -globalOffset.y);
-
-        // 计算初始的缩放比例。最终的缩放比例为1。并调整缩放方向，使看着协调。
-        float startScale = 0;
-        if ((float) finalBounds.width() / finalBounds.height()
-                > (float) startBounds.width() / startBounds.height()) {
-            // 横向缩放
-            float startWidth = startScale * finalBounds.width();
-            float deltaWidth = (startWidth - startBounds.width()) / 2;
-            startBounds.left -= deltaWidth;
-            startBounds.right += deltaWidth;
-        } else {
-            // 竖向缩放
-            float startHeight = startScale * finalBounds.height();
-            float deltaHeight = (startHeight - startBounds.height()) / 2;
-            startBounds.top -= deltaHeight;
-            startBounds.bottom += deltaHeight;
-        }
-
-        // 隐藏小图，并显示大图
-        thumbView.setAlpha(0f);
-        iv.setVisibility(View.VISIBLE);
-
-        // 将大图的缩放中心点移到左上角。默认是从中心缩放
-        iv.setPivotX(0f);
-        iv.setPivotY(0f);
-
-        //对大图进行缩放动画
-        AnimatorSet set = new AnimatorSet();
-        set.play(ObjectAnimator.ofFloat(iv, View.X, startBounds.left, finalBounds.left))
-                .with(ObjectAnimator.ofFloat(iv, View.Y, startBounds.top, finalBounds.top))
-                .with(ObjectAnimator.ofFloat(iv, View.SCALE_X, startScale, 1f))
-                .with(ObjectAnimator.ofFloat(iv, View.SCALE_Y, startScale, 1f));
-        set.setDuration(mShortAnimationDuration);
-        set.setInterpolator(new DecelerateInterpolator());
-        set.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mCurrentAnimator = null;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                mCurrentAnimator = null;
-            }
-        });
-        set.start();
-        mCurrentAnimator = set;
-
-        // 点击大图时，反向缩放大图，然后隐藏大图，显示小图。
-        final float startScaleFinal = startScale;
-        iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mCurrentAnimator != null) {
-                    mCurrentAnimator.cancel();
-                }
-
-                AnimatorSet set = new AnimatorSet();
-                set.play(ObjectAnimator
-                        .ofFloat(iv, View.X, startBounds.left))
-                        .with(ObjectAnimator
-                                .ofFloat(iv,
-                                        View.Y, startBounds.top))
-                        .with(ObjectAnimator
-                                .ofFloat(iv,
-                                        View.SCALE_X, startScaleFinal))
-                        .with(ObjectAnimator
-                                .ofFloat(iv,
-                                        View.SCALE_Y, startScaleFinal));
-                set.setDuration(mShortAnimationDuration);
-                set.setInterpolator(new DecelerateInterpolator());
-                set.addListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        thumbView.setAlpha(1f);
-                        iv.setVisibility(View.GONE);
-                        mCurrentAnimator = null;
+                case 3:
+                    Log.e("pp", "获取到图片");
+                    // Glide.with(EditMyInfoActivity.this).load(new File(URL.PATH_SELECT_AVATAR)).into(binding.ciAvatar);
+                    Bitmap bitmap2 = BitmapFactory.decodeFile(Pic_Path);
+                    if (bitmap2 != null) {
+                        imagebyte = ImageUtil.getBitmap2Byte(bitmap2);
                     }
-
-                    @Override
-                    public void onAnimationCancel(Animator animation) {
-                        thumbView.setAlpha(1f);
-                        iv.setVisibility(View.GONE);
-                        mCurrentAnimator = null;
-                    }
-                });
-                set.start();
-                mCurrentAnimator = set;
+                    iv.setImageBitmap(bitmap2);
+                    basePic = bitmap2;
+                    break;
             }
-        });
+        }
     }
 
     public static void start(Context context) {
@@ -566,11 +396,5 @@ public class GetPicActivity extends BaseActivity {
     @Override
     protected void OnReceive(String code) {
 
-    }
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }
