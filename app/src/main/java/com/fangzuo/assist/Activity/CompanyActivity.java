@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +61,7 @@ public class CompanyActivity extends BaseActivity {
             public void onNext(CommonResponse commonResponse) {
                 super.onNext(commonResponse);
                 DownloadReturnBean dBean = JsonCreater.gson.fromJson(commonResponse.returnJson, DownloadReturnBean.class);
+                adapter.clear();
                 if (dBean.companies.size()>0){
                     adapter.addAll(dBean.companies);
                 }else{
@@ -92,7 +94,7 @@ public class CompanyActivity extends BaseActivity {
 
     }
 
-    @OnClick({R.id.btn_back, R.id.tv_title, R.id.tv_right})
+    @OnClick({R.id.btn_back, R.id.tv_title, R.id.tv_right, R.id.btn_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_back:
@@ -100,11 +102,42 @@ public class CompanyActivity extends BaseActivity {
                 break;
             case R.id.tv_title:
                 break;
+            case R.id.btn_add:
+                addCompany();
+                break;
             case R.id.tv_right:
                 getRegisterData();
                 break;
         }
     }
+
+    private void addCompany(){
+        Company company = new Company("捷顺电子","1.0","com.fangzuo.dgjsdj");
+        App.getRService().doIOAction("SetCompany", gson.toJson(company), new MySubscribe<CommonResponse>() {
+            @Override
+            public void onNext(CommonResponse commonResponse) {
+                super.onNext(commonResponse);
+                Toast.showText(mContext,commonResponse.returnJson);
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+            }
+        });
+    }
+
+
+
+
+
+
+
+
+
+
+
     public static void start(Context context){
         Intent intent = new Intent(context,CompanyActivity.class);
         context.startActivity(intent);

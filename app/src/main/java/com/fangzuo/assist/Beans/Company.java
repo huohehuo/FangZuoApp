@@ -3,6 +3,7 @@ package com.fangzuo.assist.Beans;
 public class Company {
     public int id;//公司名称
     public String CompanyName;//公司名称
+    public String AppVersion;//金蝶版本
     public String KingdeeVersion;//金蝶版本
     public String AppID;//程序id
     public String Img_Logo;//备注
@@ -11,4 +12,14 @@ public class Company {
     public String Remark;//备注
     public String EndTime;//终止日期格式： 20120101
     public String CanUse;//0；允许使用，1停止使用
+
+    public Company() {
+    }
+
+    public Company(String companyName, String kingdeeVersion, String appID) {
+        CompanyName = companyName;
+        AppVersion = kingdeeVersion;
+        AppID = appID;
+        CanUse="0";
+    }
 }
